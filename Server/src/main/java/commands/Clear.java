@@ -28,12 +28,12 @@ public class Clear extends AbstractCommand {
             try {
                 bdActivity.clearSQL(login);
                 if (manager.getCol().removeIf(col -> col.getLogin().equals(login))) {
-                    poolSend.submit(new ServerSender(key, "Коллекция очищена. Удалены все принадлежащие вам элементы", null));
+                    poolSend.submit(new ServerSender(key, "Коллекция очищена. Удалены все принадлежащие вам элементы"));
                 } else {
-                    poolSend.submit(new ServerSender(key, "В коллекции нет элементов принадлежащих пользователю", null));
+                    poolSend.submit(new ServerSender(key, "В коллекции нет элементов принадлежащих пользователю"));
                 }
             } catch (SQLException e) {
-                poolSend.submit(new ServerSender(key, "Ошибка при работе с БД", null));
+                poolSend.submit(new ServerSender(key, "Ошибка при работе с БД"));
             }
         };
         new Thread(clear).start();

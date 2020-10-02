@@ -45,12 +45,16 @@ public class ConnectionFrame {
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 50, 0, 50), 0, 0));
 
         buttonCnt.addActionListener(e -> {
-            String answer = String.valueOf(gui.getClient().connection(portField.getText(), hostField.getText()));
-            if (answer.equals("!!!")) {
-                frame.dispose();
-                gui.getAuthorization().createAuthorizationFrame();
+            if (portField.getText().equals("") || hostField.getText().equals("")) {
+                result.setText("<html>" + "Поля не могут быть пустыми" + "</html>");
             } else {
-                result.setText("<html>" + answer + "</html>");
+                String answer = String.valueOf(gui.getClient().connection(portField.getText(), hostField.getText()));
+                if (answer.equals("!!!")) {
+                    frame.dispose();
+                    gui.getAuthorization().createAuthorizationFrame();
+                } else {
+                    result.setText("<html>" + answer + "</html>");
+                }
             }
         });
 

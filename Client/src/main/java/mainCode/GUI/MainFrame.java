@@ -5,6 +5,7 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class MainFrame implements Runnable {
@@ -122,18 +123,13 @@ public class MainFrame implements Runnable {
         gui.getResult().setWrapStyleWord(true);
         gui.getResult().setWrapStyleWord(true);
         gui.getResult().setEditable(false);
-        JTextField file = new JTextField();
+
         JButton script = new JButton(gui.getBundle().getString("executeScript"));
-        JLabel fileTo = new JLabel(gui.getBundle().getString("file"));
 
         table.add(jTabbedPane, new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 10, 10, 5), 0, 0));
         textArea.add(new JScrollPane(gui.getResult()), new GridBagConstraints(0, 0, 1, 2, 1.0, 0.97,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(20, 10, 0, 5), 0, 0));
-        textArea.add(fileTo, new GridBagConstraints(0, 2, 1, 1, 1.0, 0.01,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(10, 10, 0, 5), 0, 0));
-        textArea.add(file, new GridBagConstraints(0, 3, 1, 1, 1.0, 0.01,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 10, 0, 5), 0, 0));
         script.setActionCommand("execute_script");
         textArea.add(script, new GridBagConstraints(0, 4, 1, 1, 1.0, 0.01,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(10, 10, 0, 5), 0, 0));
@@ -151,10 +147,17 @@ public class MainFrame implements Runnable {
 
         script.addActionListener(e -> {
             try {
-                gui.getResult().setText((String) gui.getClient().handler(script.getActionCommand(), null, file.getText()));
+                JFileChooser file = new JFileChooser();
+                JButton open = new JButton();
+                file.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                if (file.showOpenDialog(open) == JFileChooser.APPROVE_OPTION) {
+                }
+                gui.getResult().setText((String) gui.getClient().handler(script.getActionCommand(), null, file.getSelectedFile().getAbsolutePath()));
             } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
                 gui.getResult().setText(gui.getBundle().getString("serverEx"));
+            } catch (NullPointerException ex) {
+                ex.printStackTrace();
             }
         });
 
@@ -177,11 +180,12 @@ public class MainFrame implements Runnable {
             jTabbedPane.setTitleAt(0, gui.getBundle().getString("table"));
             jTabbedPane.setTitleAt(1, gui.getBundle().getString("visualisation"));
             script.setText(gui.getBundle().getString("executeScript"));
-            fileTo.setText(gui.getBundle().getString("file"));
             gui.getResult().setText("");
         });
         mainFrame.setVisible(true);
-        new Thread(this).start();
+        Thread thread = new Thread(this);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     /**
@@ -191,27 +195,44 @@ public class MainFrame implements Runnable {
     public void run() {
         try {
             String answer;
+            HashMap<String, AcademicHat> elementsServer = new HashMap<>();
             do {
                 String condition = (String) gui.getClient().handler("show", null, null);
-                Scanner scanner = new Scanner(condition);
-                gui.getGraphicsPanel().getElements().clear();
-                do {
-                    String elements = scanner.nextLine();
-                    tableModel.insertRow(0, elements.split(", "));
-                    gui.getGraphicsPanel().udateElement(elements.split(", "));
-                } while (scanner.hasNextLine());
-                do {
-                    Thread.sleep(2000);
-                    answer = (String) gui.getClient().handler("show", null, null);
-                }while (answer.equals(condition));
-                for (int i = gui.getMain().getTableModel().getRowCount() - 1; i > -1; i--) {
-                    gui.getMain().getTableModel().removeRow(i);
+                if (!condition.equals("Коллекция пуста")) {
+                    Scanner scanner = new Scanner(condition);
+                    elementsServer.clear();
+                    do {
+                        String elements = scanner.nextLine();
+                        String[] arguments = elements.split(", ");
+                        tableModel.insertRow(0, arguments);
+                        if (!gui.getGraphicsPanel().getColors().containsKey(arguments[15])) {
+                            float[] rgb = gui.getGraphicsPanel().setColor();
+                            gui.getGraphicsPanel().getColors().put(arguments[15], new Color(rgb[0], rgb[1], rgb[2]));
+                        }
+                        AcademicHat academicHat = new AcademicHat(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5],
+                                arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13],
+                                arguments[14], arguments[15]);
+                        elementsServer.put(arguments[0], academicHat);
+                    } while (scanner.hasNextLine());
+                    gui.getGraphicsPanel().udateElement(elementsServer);
+                    do {
+                        answer = (String) gui.getClient().handler("show", null, null);
+                        Thread.sleep(1000);
+                    } while (answer.equals(condition));
+                    for (int i = gui.getMain().getTableModel().getRowCount() - 1; i > -1; i--) {
+                        gui.getMain().getTableModel().removeRow(i);
+                    }
+                } else {
+                    elementsServer.clear();
+                    gui.getGraphicsPanel().udateElement(elementsServer);
+                    Thread.sleep(1000);
                 }
             } while (true);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             gui.getResult().setText(gui.getBundle().getString("serverEx"));
         } catch (InterruptedException ex) {
+            ex.printStackTrace();
         }
     }
 }

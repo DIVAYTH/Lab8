@@ -27,9 +27,9 @@ public class PrintFormOfEducation extends AbstractCommand {
             if (manager.getCol().size() != 0) {
                 Stream<StudyGroup> stream = manager.getCol().stream();
                 poolSend.submit(new ServerSender(key, stream.filter(col -> col.getFormOfEducation() != null).sorted(new ComparatorByFormOfEducation())
-                        .map(col -> "formOfEducation" + " - " + col.getFormOfEducation()).collect(Collectors.joining("\n")), null));
+                        .map(col -> "formOfEducation" + " - " + col.getFormOfEducation()).collect(Collectors.joining("\n"))));
             } else {
-                poolSend.submit(new ServerSender(key, "Коллекция пустая", null));
+                poolSend.submit(new ServerSender(key, "Коллекция пустая"));
             }
         };
         new Thread(print).start();

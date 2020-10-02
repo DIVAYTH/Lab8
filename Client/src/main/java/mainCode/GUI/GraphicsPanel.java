@@ -1,19 +1,27 @@
 package mainCode.GUI;
 
+import com.sun.javafx.geom.Path2D;
+import javafx.scene.shape.Path;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.*;
 import java.util.*;
 
 public class GraphicsPanel extends JPanel {
-    private HashMap<String, GroupCircle> elements = new HashMap();
+    private HashMap<String, AcademicHat> elementsClient = new HashMap();
     private HashMap<String, Color> colors = new HashMap<>();
     private Random random = new Random();
     private GUI gui;
 
-    public HashMap<String, GroupCircle> getElements() {
-        return elements;
+    public HashMap<String, Color> getColors() {
+        return colors;
+    }
+
+    public HashMap<String, AcademicHat> getElementsClient() {
+        return elementsClient;
     }
 
     public GraphicsPanel(GUI gui) {
@@ -22,8 +30,8 @@ public class GraphicsPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                for (Map.Entry<String, GroupCircle> element : elements.entrySet()) {
-                    if (element.getValue().contains(e.getX(), e.getY())) {
+                for (Map.Entry<String, AcademicHat> element : elementsClient.entrySet()) {
+                    if (element.getValue().getArc2D().contains(e.getX(), e.getY())) {
                         gui.getResult().setText("id: " + element.getValue().getId() + "\n"
                                 + gui.getBundle().getString("groupName") + " " + element.getValue().getName() + "\n"
                                 + "x " + element.getValue().getX() + "\n"
@@ -52,19 +60,28 @@ public class GraphicsPanel extends JPanel {
      *
      * @param arguments
      */
-    public void udateElement(String[] arguments) {
-        float[] rgb = setColor();
-        if (!colors.containsKey(arguments[15])) {
-            colors.put(arguments[15], new Color(rgb[0], rgb[1], rgb[2]));
+    public void udateElement(HashMap<String, AcademicHat> elementsServer) {
+        try {
+            for (Map.Entry<String, AcademicHat> elementServer : elementsServer.entrySet()) {
+                if (!elementsClient.containsKey(elementServer.getKey())) {
+                    elementsClient.put(elementServer.getKey(), elementServer.getValue());
+                    new Thread(new AnimationAdd(elementServer.getValue().getArc2D(), gui)).start();
+                }
+            }
+            for (Map.Entry<String, AcademicHat> elementClient : elementsClient.entrySet()) {
+                if (!elementsServer.containsKey(elementClient.getKey())) {
+                    new Thread(new AnimationDelete(elementClient.getValue(), gui, elementsClient, elementClient.getKey())).start();
+                }
+            }
+            for (Map.Entry<String, AcademicHat> elementServer : elementsServer.entrySet()) {
+                if (!elementsClient.containsValue(elementServer.getValue())) {
+                    new Thread(new AnimationUpdate(elementsClient.get(elementServer.getKey()), elementServer.getValue(), gui, elementsClient, elementServer.getKey())).start();
+                }
+            }
+            repaint();
+        } catch (ConcurrentModificationException e) {
+            e.printStackTrace();
         }
-        GroupCircle circle = new GroupCircle(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5],
-                arguments[6], arguments[7], arguments[8], arguments[9], arguments[10], arguments[11], arguments[12], arguments[13],
-                arguments[14], arguments[15]);
-        if (!elements.containsKey(arguments[0])) {
-            elements.put(arguments[0], circle);
-            new Thread(new Animation(circle, gui)).start();
-        }
-        repaint();
     }
 
     /**
@@ -90,15 +107,13 @@ public class GraphicsPanel extends JPanel {
             super.paintComponent(g);
             this.setBackground(Color.WHITE);
             Graphics2D g2 = (Graphics2D) g;
-            Iterator<Map.Entry<String, GroupCircle>> iter = elements.entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry<String, GroupCircle> element = iter.next();
-                g2.setColor(colors.get(element.getValue().getLogin()));
-                g2.setBackground(colors.get(element.getValue().getLogin()));
-                g2.fill(element.getValue());
-                g2.draw(element.getValue());
+            for (Map.Entry<String, AcademicHat> element : elementsClient.entrySet()) {
+//                g2.setColor(colors.get(element.getValue().getLogin()));
+//                g2.setBackground(colors.get(element.getValue().getLogin()));
+                element.getValue().drawHat(g2, colors.get(element.getValue().getLogin()));
             }
-        }catch (ConcurrentModificationException e){
+        } catch (ConcurrentModificationException e) {
+            e.printStackTrace();
         }
     }
 }

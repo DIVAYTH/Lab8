@@ -32,16 +32,15 @@ public class RemoveGreater extends AbstractCommand {
                 try {
                     bdActivity.deleteByHeight(height, login);
                 } catch (SQLException e) {
-                    poolSend.submit(new ServerSender(key, "Ошибка при работе с БД", null));
+                    poolSend.submit(new ServerSender(key, "Ошибка при работе с БД"));
                 }
                 if (manager.getCol().removeIf(col -> col.getGroupAdmin().getHeight() != null && col.getGroupAdmin().getHeight() > height && col.getLogin().equals(login))) {
-                    int newSize = oldSize - manager.getCol().size();
-                    poolSend.submit(new ServerSender(key, "Элементы удалены", null));
+                    poolSend.submit(new ServerSender(key, "Элементы удалены"));
                 } else {
-                    poolSend.submit(new ServerSender(key, "Коллекция не изменина", null));
+                    poolSend.submit(new ServerSender(key, "Коллекция не изменина"));
                 }
             } else {
-                poolSend.submit(new ServerSender(key, "Коллекция пуста", null));
+                poolSend.submit(new ServerSender(key, "Коллекция пуста"));
             }
         };
         new Thread(remove).start();

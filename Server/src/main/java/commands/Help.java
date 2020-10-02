@@ -29,7 +29,7 @@ public class Help extends AbstractCommand {
                     "remove_greater height - удалить из коллекции все элементы, превышающие заданный\n" +
                     "remove_any_by_students_count studentsCount - удалить из коллекции один элемент, значение поля studentsCount которого эквивалентно заданному\n" +
                     "print_field_ascending_students_count - вывести значения поля studentsCount в порядке возрастания\n" +
-                    "print_field_descending_form_of_education - вывести значения поля formOfEducation в порядке убывания", null));
+                    "print_field_descending_form_of_education - вывести значения поля formOfEducation в порядке убывания"));
         };
         new Thread(help).start();
     }

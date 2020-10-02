@@ -6,10 +6,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.BindException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.channels.*;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.concurrent.*;
@@ -27,7 +25,7 @@ public class ServerConnection {
      *
      * @throws IOException
      */
-    public void connection(String file) throws IOException, ClassNotFoundException, InterruptedException {
+    public void connection(String file) throws IOException, ClassNotFoundException {
         logger.debug("Сервер запущен.");
         while (true) {
             try {
@@ -40,7 +38,7 @@ public class ServerConnection {
                     socketChannel.register(selector, SelectionKey.OP_ACCEPT);
                     manager.loadCommands(manager, bdActivity);
                     manager.loadToCol(file, bdActivity);
-                    logger.debug("Сервер ожидает подключения клиентов");
+                    logger.info("Сервер ожидает подключения клиентов");
                     while (selector.isOpen()) {
                         int count = selector.select();
                         if (count == 0) {
@@ -52,7 +50,6 @@ public class ServerConnection {
                             try {
                                 if (key.isAcceptable()) {
                                     SocketChannel channel = socketChannel.accept();
-                                    logger.debug("К серверу подключился клиент");
                                     channel.configureBlocking(false);
                                     channel.register(selector, SelectionKey.OP_READ);
                                 }
@@ -62,8 +59,7 @@ public class ServerConnection {
                                 }
                                 iter.remove();
                             } catch (CancelledKeyException e) {
-                                logger.error("Клиент отключился");
-                                logger.debug("Сервер ожидает подключения клиентов");
+                                // Исключение не мешает логике исполнения программы
                             }
                         }
                     }

@@ -88,16 +88,20 @@ public class AuthorizationFrame {
         });
 
         buttonReg.addActionListener(e -> {
-            try {
-                login = loginFiled.getText();
-                password = passwordField.getText();
-                String answer = (String) gui.getClient().handler("reg", null, null);
-                result.setText("<html>" + answer + "</html>");
-                loginFiled.setText("");
-                passwordField.setText("");
-            } catch (IOException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-                result.setText("<html>" + gui.getBundle().getString("serverEx") + "</html>");
+            if (loginFiled.getText().equals("") || passwordField.getText().equals("")) {
+                result.setText("<html>" + "Поля не могут быть пустыми" + "</html>");
+            } else {
+                try {
+                    login = loginFiled.getText();
+                    password = passwordField.getText();
+                    String answer = (String) gui.getClient().handler("reg", null, null);
+                    result.setText("<html>" + answer + "</html>");
+                    loginFiled.setText("");
+                    passwordField.setText("");
+                } catch (IOException | ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                    result.setText("<html>" + gui.getBundle().getString("serverEx") + "</html>");
+                }
             }
         });
 

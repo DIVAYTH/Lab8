@@ -24,21 +24,21 @@ public class RemoveStudentsCount extends AbstractCommand {
      * @return
      */
     @Override
-    public void executeCommand(ExecutorService poolSend, SelectionKey key, String str, String login) throws NumberFormatException{
+    public void executeCommand(ExecutorService poolSend, SelectionKey key, String str, String login) throws NumberFormatException {
         Runnable delete = () -> {
             if (!(manager.getCol().size() == 0)) {
                 int studentsCount = Integer.parseInt(str);
                 try {
                     bdActivity.deleteByStudentsCount(studentsCount, login);
                 } catch (SQLException e) {
-                    poolSend.submit(new ServerSender(key, "Ошибка при работе с БД", null));
+                    poolSend.submit(new ServerSender(key, "Ошибка при работе с БД"));
                 }
                 if (manager.getCol().removeIf(col -> col.getStudentsCount() != null && col.getStudentsCount() == studentsCount && col.getLogin().equals(login))) {
-                    poolSend.submit(new ServerSender(key, "Элемент удален", null));
+                    poolSend.submit(new ServerSender(key, "Элемент удален"));
                 } else
-                    poolSend.submit(new ServerSender(key, "Нет элемента с таким student_count или пользователь не имеет доступа к этому элементу", null));
+                    poolSend.submit(new ServerSender(key, "Нет элемента с таким student_count или пользователь не имеет доступа к этому элементу"));
             } else {
-                poolSend.submit(new ServerSender(key, "Коллекция пуста", null));
+                poolSend.submit(new ServerSender(key, "Коллекция пуста"));
             }
         };
         new Thread(delete).start();

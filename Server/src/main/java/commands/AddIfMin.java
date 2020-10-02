@@ -41,18 +41,19 @@ public class AddIfMin extends AbstractCommand {
                             studyGroup.setId(id);
                             studyGroup.setLogin(login);
                             manager.getCol().add(studyGroup);
-                            poolSend.submit(new ServerSender(key, null, studyGroup));
+                            poolSend.submit(new ServerSender(key, "Элемент добавлен"));
                         } catch (SQLException e) {
-                            poolSend.submit(new ServerSender(key, null, null));
+                            poolSend.submit(new ServerSender(key, "Ошибка при работе с БД"));
                         }
                     } else {
-                        poolSend.submit(new ServerSender(key, null, null));
+                        poolSend.submit(new ServerSender(key, "Элемент коллекции не сохранен, так как его height больше height " +
+                                "других элементов коллекции или равен null"));
                     }
                 } else {
-                    poolSend.submit(new ServerSender(key, null, null));
+                    poolSend.submit(new ServerSender(key, "Данные введены неверно"));
                 }
             } else {
-                poolSend.submit(new ServerSender(key, null, null));
+                poolSend.submit(new ServerSender(key, "Коллекция пуста"));
             }
         };
         new Thread(addElement).start();

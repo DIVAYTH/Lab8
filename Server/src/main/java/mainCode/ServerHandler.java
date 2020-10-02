@@ -17,14 +17,14 @@ public class ServerHandler {
     public void handler(Command command, CollectionManager manager, BDActivity bdActivity, ExecutorService poolSend, SelectionKey key) {
         try {
             if (command.getName().equals("reg")) {
-                poolSend.submit(new ServerSender(key, bdActivity.registration(command), null));
+                poolSend.submit(new ServerSender(key, bdActivity.registration(command)));
             } else if (command.getName().equals("sign")) {
                 if (bdActivity.authorization(command)) {
                     logger.debug("Пользователь с логином " + command.getLogin() + " успешно авторизован.");
-                    poolSend.submit(new ServerSender(key, "Авторизация прошла успешно", null));
+                    poolSend.submit(new ServerSender(key, "Авторизация прошла успешно"));
                 } else {
                     logger.debug("Пользователь ввел не верный пароль");
-                    poolSend.submit(new ServerSender(key, "Логин или пароль введены неверно", null));
+                    poolSend.submit(new ServerSender(key, "Логин или пароль введены неверно"));
                 }
             } else {
                 if (bdActivity.authorization(command)) {
@@ -61,10 +61,11 @@ public class ServerHandler {
                     logger.debug("Обработана команда " + command.getName());
                 } else {
                     logger.debug("Кто-то обошел защиту сервера");
-                    poolSend.submit(new ServerSender(key, "О вы юный хакер", null));
+                    poolSend.submit(new ServerSender(key, "О вы юный хакер"));
                 }
             }
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            // Исключение не мешает логике исполнения программы
         }
     }
 }

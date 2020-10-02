@@ -1,26 +1,21 @@
 package mainCode;
 
-import collectionClasses.StudyGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
-import java.util.HashSet;
 
 public class ServerSender implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ServerSender.class);
     private SelectionKey key;
-    private String answer;
-    private StudyGroup studyGroup;
+    private String serverAnswer;
 
-    public ServerSender(SelectionKey key, String answer, StudyGroup studyGroup) {
+    public ServerSender(SelectionKey key, String serverAnswer) {
         this.key = key;
-        this.answer = answer;
-        this.studyGroup = studyGroup;
+        this.serverAnswer = serverAnswer;
     }
 
     /**
@@ -30,20 +25,17 @@ public class ServerSender implements Runnable {
         SocketChannel channel = (SocketChannel) key.channel();
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ObjectOutputStream toClient = new ObjectOutputStream(baos)) {
-            if (answer != null) {
-                toClient.writeObject(answer);
-            } else {
-                toClient.writeObject(studyGroup);
-            }
+            toClient.writeObject(serverAnswer);
             ByteBuffer buffer = ByteBuffer.wrap(baos.toByteArray());
             int available = channel.write(buffer);
             while (available > 0) {
                 available = channel.write(buffer);
             }
             buffer.clear();
-            buffer.flip();
             logger.debug("Результат отправлен клиенту");
+            key.cancel();
         } catch (IOException e) {
+            // Исключение не мешает логике исполнения программы
         }
     }
 }

@@ -34,12 +34,12 @@ public class Add extends AbstractCommand {
                     studyGroup.setId(id);
                     studyGroup.setLogin(login);
                     manager.getCol().add(studyGroup);
-                    poolSend.submit(new ServerSender(key, null, studyGroup));
+                    poolSend.submit(new ServerSender(key, "Элемент добавлен"));
                 } else {
-                    poolSend.submit(new ServerSender(key, null, null));
+                    poolSend.submit(new ServerSender(key, "Данные введены неверно"));
                 }
             } catch (SQLException e) {
-                poolSend.submit(new ServerSender(key, null, null));
+                poolSend.submit(new ServerSender(key, "Ошибка при работе с БД"));
             }
         };
         new Thread(addElement).start();

@@ -31,14 +31,14 @@ public class RemoveId extends AbstractCommand {
                 try {
                     bdActivity.deleteById(id, login);
                 } catch (SQLException e) {
-                    poolSend.submit(new ServerSender(key, "Ошибка при работе с БД)", null));
+                    poolSend.submit(new ServerSender(key, "Ошибка при работе с БД)"));
                 }
                 if (manager.getCol().removeIf(col -> col.getId() == id && col.getLogin().equals(login))) {
-                    poolSend.submit(new ServerSender(key, "Элемент удален", null));
+                    poolSend.submit(new ServerSender(key, "Элемент удален"));
                 } else
-                    poolSend.submit(new ServerSender(key, "Нет элемента с таким id или пользователь не имеет доступа к этому элементу", null));
+                    poolSend.submit(new ServerSender(key, "Нет элемента с таким id или пользователь не имеет доступа к этому элементу"));
             } else {
-                poolSend.submit(new ServerSender(key, "Коллекция пуста", null));
+                poolSend.submit(new ServerSender(key, "Коллекция пуста"));
             }
         };
         new Thread(delete).start();

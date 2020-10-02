@@ -1,11 +1,13 @@
 package mainCode.GUI;
 
-public class Animation implements Runnable {
-    private GroupCircle circle;
+import java.awt.geom.Arc2D;
+
+public class AnimationAdd implements Runnable {
+    private Arc2D path;
     private GUI gui;
 
-    public Animation(GroupCircle circle, GUI gui) {
-        this.circle = circle;
+    public AnimationAdd(Arc2D path, GUI gui) {
+        this.path = path;
         this.gui = gui;
     }
 
@@ -15,17 +17,21 @@ public class Animation implements Runnable {
     @Override
     public void run() {
         try {
-            while (circle.getHeight() < Double.parseDouble(circle.getStudentsCount()) * 1.25) {
-                circle.increase();
+            while (path.getHeight() < path.getHeight() * 1.25) {
+                path.getBounds().x++;
+                path.getBounds().y++;
                 gui.getGraphicsPanel().repaint();
                 Thread.sleep(25);
             }
-            while (circle.getHeight() > Double.parseDouble(circle.getStudentsCount())) {
-                circle.decrease();
+            while (path.getHeight() > path.getHeight()) {
+                path.getBounds().x--;
+                path.getBounds().y--;
                 gui.getGraphicsPanel().repaint();
                 Thread.sleep(25);
             }
         } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
+

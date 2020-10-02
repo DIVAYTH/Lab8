@@ -27,9 +27,9 @@ public class PrintStudentsCount extends AbstractCommand {
             if (!(manager.getCol().size() == 0)) {
                 Stream<StudyGroup> stream = manager.getCol().stream();
                 poolSend.submit(new ServerSender(key, stream.filter(col -> col.getStudentsCount() != null).sorted(new ComparatorByStudentCount())
-                        .map(col -> "students count" + " - " + col.getStudentsCount()).collect(Collectors.joining("\n")), null));
+                        .map(col -> "students count" + " - " + col.getStudentsCount()).collect(Collectors.joining("\n"))));
             } else {
-                poolSend.submit(new ServerSender(key, "Коллекция пустая", null));
+                poolSend.submit(new ServerSender(key, "Коллекция пустая"));
             }
         };
         new Thread(print).start();

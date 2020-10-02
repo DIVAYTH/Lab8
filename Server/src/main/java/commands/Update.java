@@ -37,18 +37,18 @@ public class Update extends AbstractCommand {
                             studyGroup.setId(id);
                             studyGroup.setLogin(login);
                             manager.getCol().add(studyGroup);
-                            poolSend.submit(new ServerSender(key, null, studyGroup));
+                            poolSend.submit(new ServerSender(key, "Элемент обновлен"));
                         } else {
-                            poolSend.submit(new ServerSender(key, null, null));
+                            poolSend.submit(new ServerSender(key, "Элемента с таким id нет или пользователь не имеет доступа к этому элементу"));
                         }
                     } else {
-                        poolSend.submit(new ServerSender(key, null, null));
+                        poolSend.submit(new ServerSender(key, "Коллекция пуста"));
                     }
                 } else {
-                    poolSend.submit(new ServerSender(key, null, null));
+                    poolSend.submit(new ServerSender(key, "Данные введены неверно"));
                 }
             } catch (SQLException e) {
-                poolSend.submit(new ServerSender(key, null, null));
+                poolSend.submit(new ServerSender(key, "Ошибка при работе с БД"));
             }
         };
         new Thread(update).start();

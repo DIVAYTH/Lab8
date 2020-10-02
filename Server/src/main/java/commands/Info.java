@@ -25,7 +25,7 @@ public class Info extends AbstractCommand {
         Runnable info = () ->
                 poolSend.submit(new ServerSender(key, "PriorityQueue\n" +
                         initDate + "\n" +
-                        manager.getCol().size(), null));
+                        manager.getCol().size()));
         new Thread(info).start();
     }
 }

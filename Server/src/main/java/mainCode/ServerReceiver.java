@@ -4,11 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
-import java.util.HashSet;
 import java.util.concurrent.ExecutorService;
 
 public class ServerReceiver implements Runnable {
@@ -46,7 +44,9 @@ public class ServerReceiver implements Runnable {
                 fromClient.close();
                 buffer.clear();
                 if (command.getName().equals("reg") || command.getName().equals("sign")) {
-                    logger.debug("От клиента получен логин и пароль");
+                    logger.info("От клиента получен логин и пароль");
+                } else if (command.getName().equals("show")) {
+                    logger.info("Запрос на обновление данных");
                 } else {
                     logger.info("От клиента получена команда " + command.getName());
                 }
@@ -56,6 +56,7 @@ public class ServerReceiver implements Runnable {
                 key.cancel();
             }
         } catch (IOException | ClassNotFoundException e) {
+            // Исключение не мешает логике исполнения программы
         }
     }
 }

@@ -8,9 +8,14 @@ import java.io.IOException;
 
 public class AddFrame {
     private GUI gui;
+    private JLabel validate = new JLabel();
 
     public AddFrame(GUI gui) {
         this.gui = gui;
+    }
+
+    public JLabel getValidate() {
+        return validate;
     }
 
     /**
@@ -19,6 +24,7 @@ public class AddFrame {
      * @param command
      */
     public void createAddFrame(String command) {
+        validate.setText("");
         int count = 0;
         JTextField idFiled = new JTextField();
         JFrame addFrame = new JFrame("Lab 8");
@@ -27,7 +33,6 @@ public class AddFrame {
         addFrame.setDefaultCloseOperation(addFrame.DISPOSE_ON_CLOSE);
         addFrame.setResizable(false);
         addFrame.setLocationRelativeTo(null);
-
         if (command.equals("update")) {
             createComponentForAdd(addFrame, "id: ", idFiled, count++);
         }
@@ -117,7 +122,6 @@ public class AddFrame {
         JTextField locYField = new JTextField();
         JTextField locZfield = new JTextField();
         JButton buttonAuth = new JButton(gui.getBundle().getString("submit"));
-
         createComponentForAdd(addFrame, gui.getBundle().getString("groupName"), nameFiled, count++);
         createComponentForAdd(addFrame, "x: ", xFiled, count++);
         createComponentForAdd(addFrame, "y: ", yFiled, count++);
@@ -131,6 +135,7 @@ public class AddFrame {
         createComponentForAdd(addFrame, "locX: ", locXField, count++);
         createComponentForAdd(addFrame, "locY: ", locYField, count++);
         createComponentForAdd(addFrame, "locZ: ", locZfield, count++);
+        createComponentForAdd(addFrame, "", validate, count++);
         addFrame.add(buttonAuth, new GridBagConstraints(0, count++, 1, 1, 1.0, 1.0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(5, 50, 20, 0), 0, 0));
 
@@ -139,7 +144,6 @@ public class AddFrame {
             String semester;
             String color;
             String country;
-
             try {
                 formOfEducation = formOfEducationRadio.getSelection().getActionCommand();
             } catch (NullPointerException ex) {
@@ -160,7 +164,6 @@ public class AddFrame {
             } catch (NullPointerException ex) {
                 country = null;
             }
-
             String[] arrguments = new String[]{nameFiled.getText(), xFiled.getText(), yFiled.getText(), studentsCountField.getText(), formOfEducation,
                     semester, perNameFiled.getText(), heightField.getText(), color, country, locXField.getText(),
                     locYField.getText(), locZfield.getText()};
@@ -169,34 +172,29 @@ public class AddFrame {
                     case "add":
                     case "add_if_max":
                     case "add_if_min": {
-                        StudyGroup studyGroup = (StudyGroup) gui.getClient().handler(command, arrguments, null);
-                        if (studyGroup != null) {
-                            gui.getResult().setText(gui.getBundle().getString("addWell"));
-                        } else {
-                            gui.getResult().setText(gui.getBundle().getString("addBad"));
+                        String result = gui.getClient().handler(command, arrguments, null);
+                        if (!result.equals("Данные введены неверно")) {
+                            gui.getResult().setText(result);
+                            addFrame.dispose();
                         }
                     }
                     break;
                     case "update": {
-                        try {
-                            Integer.parseInt(idFiled.getText());
-                            StudyGroup studyGroup = (StudyGroup) gui.getClient().handler(command, arrguments, idFiled.getText());
-                            if (studyGroup != null) {
-                                gui.getResult().setText(gui.getBundle().getString("updateWell"));
-                            } else {
-                                gui.getResult().setText(gui.getBundle().getString("updateBad"));
-                            }
-                        } catch (NumberFormatException ex) {
-                            gui.getResult().setText(gui.getBundle().getString("argEx"));
+                        String result = gui.getClient().handler(command, arrguments, idFiled.getText());
+                        if (!result.equals("Данные введены неверно")) {
+                            gui.getResult().setText(result);
+                            addFrame.dispose();
                         }
                     }
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
                 gui.getResult().setText(gui.getBundle().getString("serverEx"));
+                addFrame.dispose();
+            } catch (NumberFormatException ex) {
+                ex.printStackTrace();
+                validate.setText("Id должно бытьчислом");
             }
-
-            addFrame.dispose();
         });
         addFrame.setVisible(true);
     }
@@ -212,7 +210,6 @@ public class AddFrame {
     private void createComponentForAdd(JFrame addFrame, String arg1, JComponent arg2, int position) {
         addFrame.add(new JLabel(arg1), new GridBagConstraints(0, position, 1, 1, 1.0, 1.0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(5, 40, 0, 0), 0, 0));
-
         addFrame.add(arg2, new GridBagConstraints(1, position, 1, 1, 1.0, 1.0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(5, 10, 0, 70), 0, 0));
     }

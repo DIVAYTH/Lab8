@@ -2,6 +2,7 @@ package mainCode.GUI;
 
 import collectionClasses.*;
 import mainCode.Client;
+import mainCode.Localization;
 
 import javax.swing.*;
 import java.util.*;
@@ -15,6 +16,7 @@ public class GUI {
     private AddFrame add = new AddFrame(this);
     private RemoveFrame remove = new RemoveFrame(this);
     private GraphicsPanel graphicsPanel = new GraphicsPanel(this);
+    private Localization localization = new Localization(this);
     private JTextArea result = new JTextArea();
 
     public ResourceBundle getBundle() {
@@ -47,6 +49,10 @@ public class GUI {
 
     public GraphicsPanel getGraphicsPanel() {
         return graphicsPanel;
+    }
+
+    public Localization getLocalization() {
+        return localization;
     }
 
     public JTextArea getResult() {
