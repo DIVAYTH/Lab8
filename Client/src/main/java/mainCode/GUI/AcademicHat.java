@@ -23,8 +23,10 @@ public class AcademicHat {
     private String locY;
     private String locZ;
     private String login;
-    private GeneralPath path;
-    private Arc2D arc2D;
+    private Head had;
+    private Polygon rhombus;
+    private Rope rope;
+    private Polygon triangle;
     int hatX;
     int hatY;
     int size;
@@ -48,39 +50,33 @@ public class AcademicHat {
         this.locY = locY;
         this.locZ = locZ;
         this.login = login;
-        this.path = new GeneralPath();
         hatX = Integer.parseInt(x) + 250;
         hatY = (int) (Double.parseDouble(y)) + 170;
         size = Integer.parseInt(studentsCount);
-        arc2D = new Arc2D.Double(hatX, hatY, size, size, 170, 200, Arc2D.PIE);
+        had = new Head(new Point(hatX, hatY), size, size, 170, 200);
+        rhombus = new Polygon(new int[]{hatX + size / 2, hatX + size * 2, hatX + size / 2, hatX - size},
+                new int[]{hatY + size / 2, hatY + size / 4, hatY - size / 4, hatY + size / 4}, 4);
+        rope = new Rope(new Point(hatX - size, hatY + size / 4),
+                new Point(hatX - size, hatY + size));
+        triangle = new Polygon(new int[]{hatX - size, hatX - size + size / 6, hatX - size - size / 6},
+                new int[]{hatY + size, hatY + size + size / 6, hatY + size + size / 6}, 3);
     }
 
     public void drawHat(Graphics2D g2, Color color) {
-        GeneralPath path = new GeneralPath();
-        path.moveTo(hatX + size / 2, hatY + size / 2);
-        path.lineTo(hatX + size * 2, hatY + size / 4);
-        path.lineTo(hatX + size / 2, hatY - size / 4);
-        path.lineTo(hatX - size, hatY + size / 4);
-        path.closePath();
-        g2.fill(path);
-        Line2D.Double line = new Line2D.Double(new Point2D.Double(hatX - size, hatY + size / 4),
-                new Point2D.Double(hatX - size, hatY + size));
-        path.append(line, false);
-        path.closePath();
-        Line2D.Double line1 = new Line2D.Double(new Point2D.Double(hatX - size, hatY + size),
-                new Point2D.Double(hatX - size + size / 6, hatY + size + size / 6));
-        Line2D.Double line2 = new Line2D.Double(new Point2D.Double(hatX - size + size / 6, hatY + size + size / 6),
-                new Point2D.Double(hatX - size - size / 6, hatY + size + size / 6));
-        Line2D.Double line3 = new Line2D.Double(new Point2D.Double(hatX - size - size / 6, hatY + size + size / 6),
-                new Point2D.Double(hatX - size, hatY + size));
-        path.append(line1, false);
-        path.append(line2, false);
-        path.append(line3, false);
-        g2.setColor(color);
-        g2.fill(arc2D);
-        path.append(arc2D, false);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(Color.BLACK);
-        g2.draw(path);
+        g2.fill(rhombus);
+        g2.draw(rhombus);
+
+        g2.setColor(color);
+        g2.fill(had);
+        g2.draw(had);
+
+        g2.setColor(Color.YELLOW);
+        g2.fill(rope);
+        g2.draw(rope);
+        g2.fill(triangle);
+        g2.draw(triangle);
     }
 
     public String getId() {
@@ -147,11 +143,208 @@ public class AcademicHat {
         return login;
     }
 
-    public GeneralPath getPath() {
-        return path;
+    public Polygon getRhombus() {
+        return rhombus;
     }
 
-    public Arc2D getArc2D() {
-        return arc2D;
+    public Head getHad() {
+        return had;
+    }
+
+    public Polygon getTriangle() {
+        return triangle;
+    }
+
+    public Rope getRope() {
+        return rope;
+    }
+
+    public void increase() {
+        rhombus.xpoints[0]++;
+        rhombus.xpoints[1]++;
+        rhombus.xpoints[2]++;
+        rhombus.ypoints[0]++;
+        rhombus.ypoints[1]++;
+        rhombus.ypoints[2]++;
+        had.increase();
+    }
+
+    public void decrease() {
+        rhombus.xpoints[0]--;
+        rhombus.xpoints[1]--;
+        rhombus.xpoints[2]--;
+        rhombus.ypoints[0]--;
+        rhombus.ypoints[1]--;
+        rhombus.ypoints[2]--;
+        had.decrease();
+    }
+
+    public void hatUp(){
+        rhombus.ypoints[0]--;
+        rhombus.ypoints[1]--;
+        rhombus.ypoints[2]--;
+        rhombus.ypoints[3]--;
+        triangle.ypoints[0]--;
+        triangle.ypoints[1]--;
+        triangle.ypoints[2]--;
+        rope.lineUp();
+    }
+
+    public void hatDown(){
+        rhombus.ypoints[0]++;
+        rhombus.ypoints[1]++;
+        rhombus.ypoints[2]++;
+        rhombus.ypoints[3]++;
+        triangle.ypoints[0]++;
+        triangle.ypoints[1]++;
+        triangle.ypoints[2]++;
+        rope.lineDown();
+    }
+
+    class Head extends Arc2D {
+        private Point point;
+        private double w;
+        private double h;
+        private double start;
+        private double extent;
+
+        public Head(Point point, double w, double h, double start, double extent) {
+            super(Arc2D.PIE);
+            this.point = point;
+            this.w = w;
+            this.h = h;
+            this.start = start;
+            this.extent = extent;
+        }
+
+        @Override
+        public double getAngleStart() {
+            return start;
+        }
+
+        @Override
+        public double getAngleExtent() {
+            return extent;
+        }
+
+        @Override
+        public void setArc(double x, double y, double w, double h, double angSt, double angExt, int closure) {
+            point.setLocation(x, y);
+            this.w = w;
+            this.h = h;
+            this.start = angSt;
+            this.extent = angExt;
+        }
+
+        @Override
+        public void setAngleStart(double angSt) {
+            this.start = angSt;
+        }
+
+        @Override
+        public void setAngleExtent(double angExt) {
+            this.extent = angExt;
+        }
+
+        @Override
+        protected Rectangle2D makeBounds(double x, double y, double w, double h) {
+            return null;
+        }
+
+        @Override
+        public double getX() {
+            return point.x;
+        }
+
+        @Override
+        public double getY() {
+            return point.y;
+        }
+
+        @Override
+        public double getWidth() {
+            return w;
+        }
+
+        @Override
+        public double getHeight() {
+            return h;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        public void increase() {
+            w++;
+            h++;
+        }
+
+        public void decrease() {
+            w--;
+            h--;
+        }
+    }
+
+    class Rope extends Line2D {
+        private Point point1;
+        private Point point2;
+
+        public Rope(Point point1, Point point2) {
+            this.point1 = point1;
+            this.point2 = point2;
+        }
+
+        @Override
+        public double getX1() {
+            return point1.x;
+        }
+
+        @Override
+        public double getY1() {
+            return point1.y;
+        }
+
+        @Override
+        public Point2D getP1() {
+            return point1;
+        }
+
+        @Override
+        public double getX2() {
+            return point2.x;
+        }
+
+        @Override
+        public double getY2() {
+            return point2.y;
+        }
+
+        @Override
+        public Point2D getP2() {
+            return point2;
+        }
+
+        @Override
+        public void setLine(double x1, double y1, double x2, double y2) {
+            point1.setLocation(x1, y1);
+            point2.setLocation(x2, y2);
+        }
+
+        @Override
+        public Rectangle2D getBounds2D() {
+            return null;
+        }
+
+        public void lineUp() {
+            point1.y--;
+            point2.y--;
+        }
+
+        public void lineDown(){
+            point1.y++;
+            point2.y++;
+        }
     }
 }

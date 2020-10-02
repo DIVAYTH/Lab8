@@ -1,31 +1,27 @@
 package mainCode.GUI;
 
-import java.awt.geom.Arc2D;
-
 public class AnimationAdd implements Runnable {
-    private Arc2D path;
+    private AcademicHat academicHat;
     private GUI gui;
 
-    public AnimationAdd(Arc2D path, GUI gui) {
-        this.path = path;
+    public AnimationAdd(AcademicHat academicHat, GUI gui) {
+        this.academicHat = academicHat;
         this.gui = gui;
     }
 
     /**
-     * Метод создает анимацию при добавлении элемента
+     * Метод создает анимацию при добавлени  элемента
      */
     @Override
     public void run() {
         try {
-            while (path.getHeight() < path.getHeight() * 1.25) {
-                path.getBounds().x++;
-                path.getBounds().y++;
+            while (academicHat.getHad().getHeight() < Integer.parseInt(academicHat.getStudentsCount()) * 1.25) {
+                academicHat.increase();
                 gui.getGraphicsPanel().repaint();
                 Thread.sleep(25);
             }
-            while (path.getHeight() > path.getHeight()) {
-                path.getBounds().x--;
-                path.getBounds().y--;
+            while (academicHat.getHad().getHeight() > Integer.parseInt(academicHat.getStudentsCount())) {
+                academicHat.decrease();
                 gui.getGraphicsPanel().repaint();
                 Thread.sleep(25);
             }
@@ -34,4 +30,3 @@ public class AnimationAdd implements Runnable {
         }
     }
 }
-

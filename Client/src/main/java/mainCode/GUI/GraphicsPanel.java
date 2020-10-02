@@ -1,13 +1,9 @@
 package mainCode.GUI;
 
-import com.sun.javafx.geom.Path2D;
-import javafx.scene.shape.Path;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.*;
 import java.util.*;
 
 public class GraphicsPanel extends JPanel {
@@ -31,7 +27,10 @@ public class GraphicsPanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 for (Map.Entry<String, AcademicHat> element : elementsClient.entrySet()) {
-                    if (element.getValue().getArc2D().contains(e.getX(), e.getY())) {
+                    if (element.getValue().getHad().contains(e.getX(), e.getY()) ||
+                            element.getValue().getRhombus().contains(e.getX(), e.getY()) ||
+                            element.getValue().getRope().contains(e.getX(), e.getY()) ||
+                            element.getValue().getTriangle().contains(e.getX(), e.getY())) {
                         gui.getResult().setText("id: " + element.getValue().getId() + "\n"
                                 + gui.getBundle().getString("groupName") + " " + element.getValue().getName() + "\n"
                                 + "x " + element.getValue().getX() + "\n"
@@ -65,17 +64,12 @@ public class GraphicsPanel extends JPanel {
             for (Map.Entry<String, AcademicHat> elementServer : elementsServer.entrySet()) {
                 if (!elementsClient.containsKey(elementServer.getKey())) {
                     elementsClient.put(elementServer.getKey(), elementServer.getValue());
-                    new Thread(new AnimationAdd(elementServer.getValue().getArc2D(), gui)).start();
+                    new Thread(new AnimationAdd(elementServer.getValue(), gui)).start();
                 }
             }
             for (Map.Entry<String, AcademicHat> elementClient : elementsClient.entrySet()) {
                 if (!elementsServer.containsKey(elementClient.getKey())) {
                     new Thread(new AnimationDelete(elementClient.getValue(), gui, elementsClient, elementClient.getKey())).start();
-                }
-            }
-            for (Map.Entry<String, AcademicHat> elementServer : elementsServer.entrySet()) {
-                if (!elementsClient.containsValue(elementServer.getValue())) {
-                    new Thread(new AnimationUpdate(elementsClient.get(elementServer.getKey()), elementServer.getValue(), gui, elementsClient, elementServer.getKey())).start();
                 }
             }
             repaint();
@@ -108,8 +102,7 @@ public class GraphicsPanel extends JPanel {
             this.setBackground(Color.WHITE);
             Graphics2D g2 = (Graphics2D) g;
             for (Map.Entry<String, AcademicHat> element : elementsClient.entrySet()) {
-//                g2.setColor(colors.get(element.getValue().getLogin()));
-//                g2.setBackground(colors.get(element.getValue().getLogin()));
+                g2.setBackground(Color.WHITE);
                 element.getValue().drawHat(g2, colors.get(element.getValue().getLogin()));
             }
         } catch (ConcurrentModificationException e) {
