@@ -15,6 +15,7 @@ public class AnimationDelete implements Runnable {
         this.arg = arg;
     }
 
+
     /**
      * Метод создает анимацию при удалении элемента
      */
