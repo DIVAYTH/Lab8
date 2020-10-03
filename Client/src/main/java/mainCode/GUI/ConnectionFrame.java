@@ -46,7 +46,7 @@ public class ConnectionFrame {
 
         buttonCnt.addActionListener(e -> {
             if (portField.getText().equals("") || hostField.getText().equals("")) {
-                result.setText("<html>" + "Поля не могут быть пустыми" + "</html>");
+                result.setText("<html>" + gui.getBundle().getString("emptyFields") + "</html>");
             } else {
                 String answer = String.valueOf(gui.getClient().connection(portField.getText(), hostField.getText()));
                 if (answer.equals("!!!")) {

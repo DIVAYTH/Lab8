@@ -47,8 +47,7 @@ public class AddIfMax extends AbstractCommand {
                             poolSend.submit(new ServerSender(key, "Ошибка при работе с БД"));
                         }
                     } else {
-                        poolSend.submit(new ServerSender(key, "Элемент коллекции не сохранен, так как его height меньше" +
-                                "height других элементов или равен null"));
+                        poolSend.submit(new ServerSender(key, "Элемент коллекции не сохранен"));
                     }
                 } else {
                     poolSend.submit(new ServerSender(key, "Данные введены неверно"));

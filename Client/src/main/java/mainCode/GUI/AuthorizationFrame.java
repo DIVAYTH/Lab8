@@ -82,14 +82,13 @@ public class AuthorizationFrame {
                 loginFiled.setText("");
                 passwordField.setText("");
             } catch (IOException | ClassNotFoundException ex) {
-                ex.printStackTrace();
                 result.setText("<html>" + gui.getBundle().getString("serverEx") + "</html>");
             }
         });
 
         buttonReg.addActionListener(e -> {
             if (loginFiled.getText().equals("") || passwordField.getText().equals("")) {
-                result.setText("<html>" + "Поля не могут быть пустыми" + "</html>");
+                result.setText("<html>" + gui.getBundle().getString("emptyFields") + "</html>");
             } else {
                 try {
                     login = loginFiled.getText();
@@ -99,7 +98,6 @@ public class AuthorizationFrame {
                     loginFiled.setText("");
                     passwordField.setText("");
                 } catch (IOException | ClassNotFoundException ex) {
-                    ex.printStackTrace();
                     result.setText("<html>" + gui.getBundle().getString("serverEx") + "</html>");
                 }
             }

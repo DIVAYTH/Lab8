@@ -53,18 +53,16 @@ public class RemoveFrame {
             try {
                 String result = (String) gui.getClient().handler(command, null, arg2.getText());
                 if (!result.equals("Данные введены неверно")) {
-                    gui.getResult().setText(result);
+                    gui.getResult().setText(gui.getLocalization().localize(result));
                     removeFrame.dispose();
                 } else {
-                    validate.setText("<html>" + "Поле" + "должно быть числом" + "</html>");
+                    validate.setText("<html>" + gui.getBundle().getString("needValue") + "</html>");
                 }
             } catch (IOException | ClassNotFoundException ex) {
-                ex.printStackTrace();
                 gui.getResult().setText(gui.getBundle().getString("serverEx"));
                 removeFrame.dispose();
             } catch (NumberFormatException ex) {
-                ex.printStackTrace();
-                validate.setText("Вы ввели не число");
+                validate.setText(gui.getBundle().getString("needValue"));
             }
         });
         removeFrame.setVisible(true);

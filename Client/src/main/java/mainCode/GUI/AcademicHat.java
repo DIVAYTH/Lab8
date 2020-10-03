@@ -52,7 +52,12 @@ public class AcademicHat {
         this.login = login;
         hatX = Integer.parseInt(x) + 250;
         hatY = (int) (Double.parseDouble(y)) + 170;
-        size = Integer.parseInt(studentsCount);
+        try {
+            size = Integer.parseInt(studentsCount);
+        }catch (NumberFormatException e){
+            size = 50;
+            // значения по умолчанию
+        }
         had = new Head(new Point(hatX, hatY), size, size, 170, 200);
         rhombus = new Polygon(new int[]{hatX + size / 2, hatX + size * 2, hatX + size / 2, hatX - size},
                 new int[]{hatY + size / 2, hatY + size / 4, hatY - size / 4, hatY + size / 4}, 4);
@@ -62,6 +67,12 @@ public class AcademicHat {
                 new int[]{hatY + size, hatY + size + size / 6, hatY + size + size / 6}, 3);
     }
 
+    /**
+     * Метод рисует элементы
+     *
+     * @param g2
+     * @param color
+     */
     public void drawHat(Graphics2D g2, Color color) {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(Color.BLACK);
@@ -159,6 +170,9 @@ public class AcademicHat {
         return rope;
     }
 
+    /**
+     * Метод увеличивает размер объекта
+     */
     public void increase() {
         rhombus.xpoints[0]++;
         rhombus.xpoints[1]++;
@@ -169,6 +183,9 @@ public class AcademicHat {
         had.increase();
     }
 
+    /**
+     * Метод уменьшает размер объекта
+     */
     public void decrease() {
         rhombus.xpoints[0]--;
         rhombus.xpoints[1]--;
@@ -179,7 +196,10 @@ public class AcademicHat {
         had.decrease();
     }
 
-    public void hatUp(){
+    /**
+     * Метод поднимает шляпу
+     */
+    public void hatUp() {
         rhombus.ypoints[0]--;
         rhombus.ypoints[1]--;
         rhombus.ypoints[2]--;
@@ -190,7 +210,10 @@ public class AcademicHat {
         rope.lineUp();
     }
 
-    public void hatDown(){
+    /**
+     * Метод опускает шляпу
+     */
+    public void hatDown() {
         rhombus.ypoints[0]++;
         rhombus.ypoints[1]++;
         rhombus.ypoints[2]++;
@@ -342,7 +365,7 @@ public class AcademicHat {
             point2.y--;
         }
 
-        public void lineDown(){
+        public void lineDown() {
             point1.y++;
             point2.y++;
         }

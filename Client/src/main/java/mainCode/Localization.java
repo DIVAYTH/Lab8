@@ -25,6 +25,22 @@ public class Localization {
                 return gui.getBundle().getString("clearRes2");
             case "Ошибка при работе с БД":
                 return gui.getBundle().getString("bdEx");
+            case "Элемент добавлен":
+                return gui.getBundle().getString("elementAdd");
+            case "Данные введены неверно":
+                return gui.getBundle().getString("badAdd");
+            case "Элемент коллекции не сохранен":
+                return gui.getBundle().getString("noSave");
+            case "Коллекция пуста":
+                return gui.getBundle().getString("colEmpty");
+            case "Элементы удалены":
+                return gui.getBundle().getString("elementDel");
+            case "Коллекция не изменина":
+                return gui.getBundle().getString("noChange");
+            case "Нет элемента с таким id или пользователь не имеет доступа к этому элементу":
+                return gui.getBundle().getString("deleteError");
+            case "Нет элемента с таким student_count или пользователь не имеет доступа к этому элементу":
+                return gui.getBundle().getString("deleteError2");
             default:
                 return str;
         }

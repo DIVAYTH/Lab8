@@ -174,7 +174,7 @@ public class AddFrame {
                     case "add_if_min": {
                         String result = gui.getClient().handler(command, arrguments, null);
                         if (!result.equals("Данные введены неверно")) {
-                            gui.getResult().setText(result);
+                            gui.getResult().setText(gui.getLocalization().localize(result));
                             addFrame.dispose();
                         }
                     }
@@ -182,18 +182,16 @@ public class AddFrame {
                     case "update": {
                         String result = gui.getClient().handler(command, arrguments, idFiled.getText());
                         if (!result.equals("Данные введены неверно")) {
-                            gui.getResult().setText(result);
+                            gui.getResult().setText(gui.getLocalization().localize(result));
                             addFrame.dispose();
                         }
                     }
                 }
             } catch (IOException | ClassNotFoundException ex) {
-                ex.printStackTrace();
                 gui.getResult().setText(gui.getBundle().getString("serverEx"));
                 addFrame.dispose();
             } catch (NumberFormatException ex) {
-                ex.printStackTrace();
-                validate.setText("Id должно бытьчислом");
+                validate.setText(gui.getBundle().getString("emptyFields"));
             }
         });
         addFrame.setVisible(true);

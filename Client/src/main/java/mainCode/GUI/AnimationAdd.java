@@ -26,7 +26,7 @@ public class AnimationAdd implements Runnable {
                 Thread.sleep(25);
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            // Исключение не мешает логике исполнения программы
         }
     }
 }

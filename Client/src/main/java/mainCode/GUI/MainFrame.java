@@ -93,9 +93,9 @@ public class MainFrame implements Runnable {
                             break;
                     }
                 } catch (IOException | ClassNotFoundException ex) {
-                    ex.printStackTrace();
                     gui.getResult().setText(gui.getBundle().getString("serverEx"));
                 } catch (IndexOutOfBoundsException ex) {
+                    // Исключение не мешает логике исполнения программы
                 }
             });
         }
@@ -120,7 +120,6 @@ public class MainFrame implements Runnable {
         jTable.setRowSorter(sorter);
         JPanel textArea = new JPanel();
         textArea.setLayout(new GridBagLayout());
-        gui.getResult().setWrapStyleWord(true);
         gui.getResult().setWrapStyleWord(true);
         gui.getResult().setEditable(false);
 
@@ -154,10 +153,9 @@ public class MainFrame implements Runnable {
                 }
                 gui.getResult().setText((String) gui.getClient().handler(script.getActionCommand(), null, file.getSelectedFile().getAbsolutePath()));
             } catch (IOException | ClassNotFoundException ex) {
-                ex.printStackTrace();
                 gui.getResult().setText(gui.getBundle().getString("serverEx"));
             } catch (NullPointerException ex) {
-                ex.printStackTrace();
+                // Исключение не мешает логике исполнения программы
             }
         });
 
@@ -229,10 +227,9 @@ public class MainFrame implements Runnable {
                 }
             } while (true);
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
             gui.getResult().setText(gui.getBundle().getString("serverEx"));
         } catch (InterruptedException ex) {
-            ex.printStackTrace();
+            // Исключение не мешает логике исполнения программы
         }
     }
 }

@@ -256,14 +256,14 @@ public class Client {
         try {
             int result;
             if (value.equals("")) {
-                gui.getAdd().getValidate().setText("<html>" + name + " не может быть пустой строкой" + "</html>");
+                gui.getAdd().getValidate().setText("<html>" + name + " " + gui.getBundle().getString("cantEmpty") + "</html>");
                 throw new Exception();
             } else {
                 result = Integer.parseInt(value);
             }
             return result;
         } catch (NumberFormatException e) {
-            gui.getAdd().getValidate().setText("<html>" + name + " должен быть числом" + "</html>");
+            gui.getAdd().getValidate().setText("<html>" + name + " " + gui.getBundle().getString("needVal") + "</html>");
             throw new Exception();
         }
     }
@@ -275,14 +275,14 @@ public class Client {
         try {
             double result;
             if (value.equals("")) {
-                gui.getAdd().getValidate().setText("<html>" + name + " не может быть пустой строкой" + "</html>");
+                gui.getAdd().getValidate().setText("<html>" + name + " " + gui.getBundle().getString("cantEmpty") + "</html>");
                 throw new Exception();
             } else {
                 result = Double.parseDouble(value);
             }
             return result;
         } catch (NumberFormatException e) {
-            gui.getAdd().getValidate().setText("<html>" + name + " должен быть числом" + "</html>");
+            gui.getAdd().getValidate().setText("<html>" + name + " " + gui.getBundle().getString("needVal") + "</html>");
             throw new Exception();
         }
     }
@@ -292,7 +292,7 @@ public class Client {
      */
     private String checkString(String value, String name) throws Exception {
         if (value.equals("")) {
-            gui.getAdd().getValidate().setText("<html>" + name + " не может быть пустой строкой" + "</html>");
+            gui.getAdd().getValidate().setText("<html>" + name + " " + gui.getBundle().getString("cantEmpty") + "</html>");
             throw new Exception();
         }
         return value;
@@ -307,14 +307,14 @@ public class Client {
             if (value.equals("")) {
                 result = null;
             } else if (Integer.parseInt(value) < 0) {
-                gui.getAdd().getValidate().setText("<html>" + name + " должен быть больше нуля" + "</html>");
+                gui.getAdd().getValidate().setText("<html>" + name + " " + gui.getBundle().getString("moreZero") + "</html>");
                 throw new Exception();
             } else {
                 result = Integer.parseInt(value);
             }
             return result;
         } catch (NumberFormatException e) {
-            gui.getAdd().getValidate().setText("<html>" + name + " должен быть числом" + "</html>");
+            gui.getAdd().getValidate().setText("<html>" + name + " " + gui.getBundle().getString("needVal") + "</html>");
             throw new Exception();
         }
     }
@@ -333,7 +333,7 @@ public class Client {
             nationality = Country.valueOf(value);
             return nationality;
         } catch (RuntimeException e) {
-            gui.getAdd().getValidate().setText("<html>" + name + " не может быть null" + "</html>");
+            gui.getAdd().getValidate().setText("<html>" + name + " " + gui.getBundle().getString("cantNull") + "</html>");
             throw new Exception();
         }
     }

@@ -15,7 +15,6 @@ public class AnimationDelete implements Runnable {
         this.arg = arg;
     }
 
-
     /**
      * Метод создает анимацию при удалении элемента
      */
@@ -37,7 +36,7 @@ public class AnimationDelete implements Runnable {
             elementsClient.remove(arg);
             gui.getGraphicsPanel().repaint();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            // Исключение не мешает логике исполнения программы
         }
     }
 }

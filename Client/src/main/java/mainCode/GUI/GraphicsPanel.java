@@ -57,7 +57,7 @@ public class GraphicsPanel extends JPanel {
     /**
      * Метод добавляет элементы в зону визуализации
      *
-     * @param arguments
+     * @param arguments7
      */
     public void udateElement(HashMap<String, AcademicHat> elementsServer) {
         try {
@@ -72,9 +72,26 @@ public class GraphicsPanel extends JPanel {
                     new Thread(new AnimationDelete(elementClient.getValue(), gui, elementsClient, elementClient.getKey())).start();
                 }
             }
-            repaint();
+            for (Map.Entry<String, AcademicHat> elementServer : elementsServer.entrySet()) {
+                if (!elementsClient.get(elementServer.getKey()).getName().equals(elementServer.getValue().getName()) ||
+                        !elementsClient.get(elementServer.getKey()).getX().equals(elementServer.getValue().getX()) ||
+                        !elementsClient.get(elementServer.getKey()).getY().equals(elementServer.getValue().getY()) ||
+                        !elementsClient.get(elementServer.getKey()).getStudentsCount().equals(elementServer.getValue().getStudentsCount()) ||
+                        !elementsClient.get(elementServer.getKey()).getFormOfEducation().equals(elementServer.getValue().getFormOfEducation()) ||
+                        !elementsClient.get(elementServer.getKey()).getSemester().equals(elementServer.getValue().getSemester()) ||
+                        !elementsClient.get(elementServer.getKey()).getPerName().equals(elementServer.getValue().getPerName()) ||
+                        !elementsClient.get(elementServer.getKey()).getHeight().equals(elementServer.getValue().getHeight()) ||
+                        !elementsClient.get(elementServer.getKey()).getColor().equals(elementServer.getValue().getColor()) ||
+                        !elementsClient.get(elementServer.getKey()).getCountry().equals(elementServer.getValue().getCountry()) ||
+                        !elementsClient.get(elementServer.getKey()).getLocX().equals(elementServer.getValue().getLocX()) ||
+                        !elementsClient.get(elementServer.getKey()).getLocY().equals(elementServer.getValue().getLocY()) ||
+                        !elementsClient.get(elementServer.getKey()).getLocZ().equals(elementServer.getValue().getLocZ())) {
+                    new Thread(new AnimationUpdate(elementsClient.get(elementServer.getKey()), elementServer.getValue(), gui, elementsClient, elementServer.getKey())).start();
+                }
+                repaint();
+            }
         } catch (ConcurrentModificationException e) {
-            e.printStackTrace();
+            // Исключение не мешает логике исполнения программы
         }
     }
 
@@ -106,7 +123,7 @@ public class GraphicsPanel extends JPanel {
                 element.getValue().drawHat(g2, colors.get(element.getValue().getLogin()));
             }
         } catch (ConcurrentModificationException e) {
-            e.printStackTrace();
+            // Исключение не мешает логике исполнения программы
         }
     }
 }
