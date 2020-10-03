@@ -40,6 +40,7 @@ public class RemoveFrame {
         JTextField arg2 = new JTextField();
         JButton buttonAuth = new JButton(gui.getBundle().getString("submit"));
 
+
         removeFrame.add(new JLabel(arg1), new GridBagConstraints(0, 0, 1, 1, 1.0, 0.1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(10, 30, 0, 0), 0, 0));
         removeFrame.add(arg2, new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
